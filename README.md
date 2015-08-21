@@ -1,5 +1,8 @@
 ## Gryo Button
 
+![gryo button](https://joeshaw.org/dropbox/gyro-button.jpg)
+![gyro truck](http://saltmines.us/wp-content/uploads/2013/10/trailer-300x225.jpg)
+
 When you press the button on an Amazon Dash, we increment the Salt
 Mines gyro counter.  See the current count [on the
 dashboard](http://dashboard.saltmines.us/south).
