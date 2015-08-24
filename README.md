@@ -20,8 +20,12 @@ linux/arm toolchain.  If you're on a Mac, this is easy:
 
 Once that's done:
 
-    $ GOOS=linux GOARCH=arm go build
+    $ GOOS=linux GOARCH=arm GOARM=6 go build
 
-Then scp the `gyro` binary to `pi@dash1.local` and run it:
+Then scp the `gyro` binary to `pi@dash1.local` and copy it to /usr/local/bin:
 
-    $ sudo ./gyro wlan0
+    $ sudo mv ./gyro /usr/local/bin
+
+And start the service
+
+    $ sudo service gyro start

@@ -13,33 +13,47 @@ import (
 
 const gyroURL = "http://saltmines.us/gyroup.php"
 const name = "Some button pusher"
+const dashMAC = "74:c2:46:81:f2:ac"
 
-const dashMac = "74:c2:46:81:f2:ac"
+func initClient(ifaceName string) (*arp.Client, error) {
+	iface, err := net.InterfaceByName(ifaceName)
+	if err != nil {
+		return nil, err
+	}
+
+	return arp.NewClient(iface)
+}
 
 func main() {
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: arp <iface>")
 	}
 
-	iface, err := net.InterfaceByName(os.Args[1])
-	if err != nil {
-		log.Fatal("InterfaceByName: ", err)
-	}
+	log.Printf("Starting gyro at %s", time.Now())
 
-	mac, err := net.ParseMAC(dashMac)
+	mac, err := net.ParseMAC(dashMAC)
 	if err != nil {
 		log.Fatal("ParseMAC: ", err)
 	}
 
-	c, err := arp.NewClient(iface)
-	if err != nil {
-		log.Fatal("arp.NewClient: ", err)
+	var c *arp.Client
+	for {
+		var err error
+		c, err = initClient(os.Args[1])
+		if err == nil {
+			break
+		}
+
+		log.Printf("initClient: %s", err)
+		time.Sleep(3 * time.Second)
 	}
 
 	for {
 		p, _, err := c.Read()
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("c.Read: %s", err)
+			time.Sleep(3 * time.Second)
+			continue
 		}
 
 		if p.Operation == arp.OperationRequest &&
