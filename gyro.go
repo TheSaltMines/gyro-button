@@ -14,6 +14,7 @@ import (
 const gyroURL = "http://saltmines.us/gyroup.php"
 const name = "Some button pusher"
 const dashMAC = "74:c2:46:81:f2:ac"
+const debounceThreshold = 60 * time.Second
 
 func initClient(ifaceName string) (*arp.Client, error) {
 	iface, err := net.InterfaceByName(ifaceName)
@@ -48,6 +49,8 @@ func main() {
 		time.Sleep(3 * time.Second)
 	}
 
+	var debounce time.Time
+
 	for {
 		p, _, err := c.Read()
 		if err != nil {
@@ -59,6 +62,13 @@ func main() {
 		if p.Operation == arp.OperationRequest &&
 			p.SenderIP.Equal(net.IPv4zero) &&
 			p.SenderHardwareAddr.String() == mac.String() {
+
+			now := time.Now()
+			if now.Before(debounce) {
+				log.Printf("Discarding button press within debounce window")
+				continue
+			}
+			debounce = now.Add(debounceThreshold)
 
 			log.Printf("Gyro button pressed at %s!", time.Now())
 			resp, err := http.PostForm(gyroURL, url.Values{"user_name": {name}})
