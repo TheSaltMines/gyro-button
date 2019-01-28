@@ -1,11 +1,11 @@
 ## Gryo Button
 
-![gryo button](https://joeshaw.org/dropbox/gyro-button.jpg)
-![gyro truck](http://saltmines.us/wp-content/uploads/2013/10/trailer-300x225.jpg)
+When you press the button on an Amazon Dash, we (used to) increment
+the Salt Mines gyro counter.  These days it just restarts the
+dashboard GUI when it gets wedged on the Raspberry Pi.
 
-When you press the button on an Amazon Dash, we increment the Salt
-Mines gyro counter.  See the current count [on the
-dashboard](http://dashboard.saltmines.us/south).
+It works by listening for DHCP DISCOVER packets matching the Dash
+button's MAC address.
 
 Inspired by [this article by Ted
 Benson](https://medium.com/@edwardbenson/how-i-hacked-amazon-s-5-wifi-button-to-track-baby-data-794214b0bdd8).
@@ -13,8 +13,8 @@ Benson](https://medium.com/@edwardbenson/how-i-hacked-amazon-s-5-wifi-button-to-
 ## Development and deployment
 
 This runs on the Raspberry Pi in the office.  I develop it on my Mac
-and cross compile it for linux/arm.  You will need Go with the
-linux/arm toolchain.  If you're on a Mac, this is easy:
+and cross compile it for linux/arm.  If you're on a Mac, you can
+install Go with:
 
     $ brew install go
 
