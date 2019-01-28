@@ -16,16 +16,16 @@ This runs on the Raspberry Pi in the office.  I develop it on my Mac
 and cross compile it for linux/arm.  You will need Go with the
 linux/arm toolchain.  If you're on a Mac, this is easy:
 
-    $ brew install --with-cc-common go
+    $ brew install go
 
 Once that's done:
 
-    $ GOOS=linux GOARCH=arm GOARM=6 go build
+    $ GOOS=linux GOARCH=arm go build
 
-Then scp the `gyro` binary to `pi@dash1.local` and copy it to /usr/local/bin:
+Then scp the `gyro-button` binary to `pi@dash1.local` and copy it to /usr/local/bin:
 
-    $ sudo mv ./gyro /usr/local/bin
+    $ sudo mv ./gyro-button /usr/local/bin/gyro
 
 And start the service
 
-    $ sudo service gyro start
+    $ sudo systemctl restart gyro
