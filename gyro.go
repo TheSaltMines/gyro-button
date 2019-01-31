@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"log"
+	"net"
 	"os"
 	"os/exec"
 	"time"
@@ -21,6 +23,11 @@ func main() {
 
 	log.Printf("Starting gyro at %s", time.Now().Format(time.RFC3339))
 
+	mac, err := net.ParseMAC(dashMAC)
+	if err != nil {
+		log.Fatalf("Unable to parse MAC address %q: %s", dashMAC, err)
+	}
+
 	dhcp, err := dhcp4.NewSnooperConn("0.0.0.0:67")
 	if err != nil {
 		log.Fatalf("Cannot start DHCP server: %s", err)
@@ -33,6 +40,10 @@ func main() {
 		if err != nil {
 			log.Printf("RecvDHCP: %s", err)
 			time.Sleep(3 * time.Second)
+			continue
+		}
+
+		if !bytes.Equal(pkt.HardwareAddr, mac) {
 			continue
 		}
 
